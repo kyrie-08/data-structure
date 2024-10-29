@@ -35,7 +35,7 @@ struct Node* Reverse(struct Node*head){
 }
 void Print(struct Node* head){
     while(head!=NULL){
-        printf("%d",head->data);
+        printf("%d ",head->data);
         head=head->next;
     }
 }
