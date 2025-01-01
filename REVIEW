@@ -72,39 +72,6 @@ bool Delete( List L, Position P ){
     return true;
 }
 
-int main()
-{
-    List L;
-    ElementType X;
-    Position P;
-    int N;
-
-    L = MakeEmpty();
-    scanf("%d", &N);
-    while ( N-- ) {
-        scanf("%d", &X);
-        if ( Insert(L, X, 0)==false )
-            printf(" Insertion Error: %d is not in.\n", X);
-    }
-    scanf("%d", &N);
-    while ( N-- ) {
-        scanf("%d", &X);
-        P = Find(L, X);
-        if ( P == ERROR )
-            printf("Finding Error: %d is not in.\n", X);
-        else
-            printf("%d is at position %d.\n", X, P);
-    }
-    scanf("%d", &N);
-    while ( N-- ) {
-        scanf("%d", &P);
-        if ( Delete(L, P)==false )
-            printf(" Deletion Error.\n");
-        if ( Insert(L, 0, P)==false )
-            printf(" Insertion Error: 0 is not in.\n");
-    }
-    return 0;
-}
 2.有序表插入数据
 #include <iostream>
 #define MaxSize 50
@@ -148,21 +115,7 @@ void DispSqList(SqList L){
     }
 }
 void DestroySqList(SqList &L);//销毁线性表
-int main()
-{
-     int n;
-    SqList L;
-    cin>>n; 
-    CreateSqList(L,n)  ;
-     if(n>0)
-    {
-     cin>>n;
-     InsertSq(L,n) ;
-    }
-     DispSqList(L);  
-     DestroySqList(L);//细节不表
-}
-/* 请在这里填写答案 */
+
 3.实现顺序表的就地逆置
 #include <stdio.h>
 #include <stdlib.h>
@@ -176,38 +129,6 @@ struct List
 };
 typedef struct List *SeqList; //顺序表类型定义
 
-SeqList SetNullList_Seq(int m) //创建空顺序表
-{
-    //申请结构体List空间
-    SeqList slist = (SeqList)malloc(sizeof(struct List));
-    if (slist != NULL)
-    {
-        slist->elem = (DataType *)malloc(sizeof(DataType) * m);
-        //申请顺序表空间，大小为m个DataType空间
-        if (slist->elem)
-        {
-            slist->Max = m; //顺序表的最大值
-            slist->n = 0;   //顺序表长度赋值为0
-            return (slist);
-        }
-        else
-            free(slist);
-    }
-    printf("out of space!!\n");
-    return NULL;
-}
-
-void print(SeqList slist) //输出顺序表
-{
-    int i;
-    for (i = 0; i < slist->n; i++)
-    {
-        printf("%d ", slist->elem[i]);
-    }
-    printf("\n");
-    return;
-}
-
 void reverse(SeqList slist){
     for(int i=0;i<slist->n/2;i++){
         int temp=slist->elem[i];
@@ -216,18 +137,7 @@ void reverse(SeqList slist){
     }
 }
 
-int main(void)
-{
-    SeqList test = SetNullList_Seq(5); //初始化一个最大长度为5的顺序表;
-    
-    for (int i = 0; i < 5; ++i) test->elem[i] = i + 1, ++test->n; //5个元素分别赋值为1到5, 增加元素个数;
-    reverse(test);
-    printf("反转表后的元素如下:\n");
-    print(test);
-    free(test->elem); //释放堆内存;
 
-    return 0;
-}
 
 链表：随机存储，顺序存取
 在单链表中，增加头结点可以使空表和非空表的处理统一，根本目的是为了方便运算的实现
@@ -304,45 +214,42 @@ List Delete( List L, Position P )
     return ERROR;
 }
 
-
-int main()
-{
-    List L;
-    ElementType X;
-    Position P, tmp;
-    int N;
-
-    L = NULL;
-    scanf("%d", &N);
-    while ( N-- ) {
-        scanf("%d", &X);
-        L = Insert(L, X, L);
-        if ( L==ERROR ) printf("Wrong Answer\n");
-    }
-    scanf("%d", &N);
-    while ( N-- ) {
-        scanf("%d", &X);
-        P = Find(L, X);
-        if ( P == ERROR )
-            printf("Finding Error: %d is not in.\n", X);
-        else {
-            L = Delete(L, P);
-            printf("%d is found and deleted.\n", X);
-            if ( L==ERROR )
-                printf("Wrong Answer or Empty List.\n");
-        }
-    }
-    L = Insert(L, X, NULL);
-    if ( L==ERROR ) printf("Wrong Answer\n");
-    else
-        printf("%d is inserted as the last element.\n", X);
-    P = (Position)malloc(sizeof(struct LNode));
-    tmp = Insert(L, X, P);
-    if ( tmp!=ERROR ) printf("Wrong Answer\n");
-    tmp = Delete(L, P);
-    if ( tmp!=ERROR ) printf("Wrong Answer\n");
-    for ( P=L; P; P = P->Next ) printf("%d ", P->Data);
-    return 0;
-}
-
 /* 你的代码将被嵌在这里 */
+5.带头结点的带单链表的就地逆置
+void ListReverse_L(LinkList &L){
+    LinkList p,q;
+    p=L->next;
+    L->next=NULL;
+    while(p){
+        q=p->next;
+        p->next=L->next;
+        L->next=p;
+        p=q;
+    }
+}
+栈：后进先出；栈顶指针总是指在栈顶元素的下一个位置上。
+插入和删除操作只能限定在指定为栈顶的一端进行
+求栈的长度return s.top-s.base;
+队列：先进先出；
+初始化建空队列时，令 front=rear=0，每当插入一个新的队尾元素后，尾指针增1；
+每当删除一个队头元素之后，头指针 front 增1 。
+因此，在非空队列中，头指针始终指向队头元素，而尾指针指向队尾元素的"下一个"位置
+求队列长度return (Q.rear – Q.front + Q.capacity )% Q.capacity;
+链队列入队操作的时间复杂度是O(1),链队列销毁操作的时间复杂度是O(Q.size)，而循环队列销毁的时间复杂度是O(1)
+汉诺塔（递归版）
+double NumHanoi(int index){
+    if(index==1){
+        return 1;
+    }else{
+        return 2*NumHanoi(index-1)+1;
+    }
+}
+树和二叉树：n0+n1+n2=总结点数，哈夫曼树没有n1；树的总结点数等于总分支数+1；
+任何一棵二叉树的叶结点在先序、中序和后序遍历序列中的相对次序不发生改变；
+二叉树的性质和存储结构：
+性质1: 在二叉树的第i层上至多有2^(i-1)个结点，第i层上至少有1个结点；
+性质2: 深度为k的二叉树至多有2^k-1个结点，深度为k时至少有k个结点；
+性质3: 对于任何一棵二叉树，若2度的结点数有n2个，则叶子数n0必定为n2＋1 （即n0=n2+1）;
+性质4: 具有n个结点的完全二叉树的深度必为 log2n ＋1;
+性质5: 对完全二叉树，若从上至下、从左至右编号，则编号为i 的结点，其左孩子编号必为2i，其右孩子编号必为2i＋1；其双亲的编号必为i/2。
+森林：n（结点数）-k（边数）=m（有几棵树）
